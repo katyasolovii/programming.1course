@@ -1,10 +1,10 @@
 a,b,c = map(int, input().split())
 
-if a==b==c:
+if a == b == c:
     print(1)
 else:
-    if a==b or a==c or b==c:
+    if a == b or a == c or b == c:
         print (2)
     else:
-        if a!=b and a!=c and b!=c:
+        if a != b and a != c and b != c:
             print(3)
