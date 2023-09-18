@@ -1,3 +1,6 @@
+Посилання на розв'язок: https://www.eolymp.com/uk/submissions/14209020
+"""
+
 import math
 x, y = map(float, input().split())
 first_part = (2 * x * y) / (math.sqrt(pow(x, 2)+ pow(y, 2)))
