@@ -1,3 +1,6 @@
+Посилання на розв'язок: https://www.eolymp.com/uk/submissions/14199030
+"""
+
 from math import sqrt
 
 a,b,c,d,f = [float (x) for x in input(). split()]
