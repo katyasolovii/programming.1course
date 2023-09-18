@@ -1,3 +1,6 @@
+Посилання на розв'язок: https://www.eolymp.com/uk/submissions/14199109
+"""
+
 x = abs(int(input()))
 
 first_dig = x // 10
