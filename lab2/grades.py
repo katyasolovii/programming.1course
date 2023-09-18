@@ -1,3 +1,8 @@
+"""               
+Посилання на розв'язок: https://www.eolymp.com/uk/submissions/14267728
+"""  
+
+
 x = int(input())
 
 if 1 <= x <= 3:
@@ -11,7 +16,3 @@ else:
         else:
             if 10 <= x <= 12:
                 print("High")
-
-
-"""               
-Посилання на розв'язок: https://www.eolymp.com/uk/submissions/14267728
