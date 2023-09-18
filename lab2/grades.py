@@ -11,6 +11,6 @@ else:
         else:
             if 10 <= x <= 12:
                 print("High")
-                
+
+"""               
 Посилання на розв'язок: https://www.eolymp.com/uk/submissions/14267728
-""" 
