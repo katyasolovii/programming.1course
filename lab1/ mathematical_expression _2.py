@@ -1,3 +1,6 @@
+Посилання на розв'язок: https://www.eolymp.com/uk/submissions/14208756
+"""
+
 x,y  = map(float, input().split())
 
 first_part = (x ** 2 - 2 * x * y + 4 * y ** 2) / (x + 5)
