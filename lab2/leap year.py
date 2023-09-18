@@ -7,5 +7,6 @@ else:
     else: 
         print("NO")
 
+
 """ 
 Посилання на розв'язок: https://www.eolymp.com/uk/submissions/14272491
