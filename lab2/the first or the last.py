@@ -1,3 +1,6 @@
+Посилання на розв'язок: https://www.eolymp.com/uk/submissions/14267188
+"""
+
 x = int(input())
 
 x1 = x // 100
