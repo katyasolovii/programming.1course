@@ -1,5 +1,5 @@
 Посилання на розв'язок: https://www.eolymp.com/uk/submissions/14267728
-"""
+""" 
 
 x = int(input())
 
