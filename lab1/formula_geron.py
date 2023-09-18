@@ -1,6 +1,3 @@
-Посилання на розв'язок: https://www.eolymp.com/uk/submissions/14199030
-"""
-
 from math import sqrt
 
 a,b,c,d,f = [float (x) for x in input(). split()]
@@ -12,3 +9,7 @@ s1 = sqrt(p1 * (p1 - a) * (p1 - b) * (p1 - f))
 s2 = sqrt(p2 * (p2 - f) * (p2 - d) * (p2 - c)) 
 
 print(s1 + s2)
+
+
+"""
+Посилання на розв'язок: https://www.eolymp.com/uk/submissions/14199030
