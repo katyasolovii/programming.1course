@@ -8,3 +8,6 @@ else:
     else:
         if a != b and a != c and b != c:
             print(3)
+            
+Посилання на розв'язок: https://www.eolymp.com/uk/submissions/14267677
+"""
