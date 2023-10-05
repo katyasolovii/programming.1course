@@ -3,9 +3,9 @@
 """
 
 n = int(input())
-digits = [n]
+summ = 0
 while n != 0:
+    summ += n
     n = int(input())
-    digits.append(n)
-print(sum(digits))
+print(summ)
 
