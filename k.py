@@ -1,7 +1,9 @@
 """
-Посилання на розв'язок: https://www.eolymp.com/uk/submissions/14953966
+Посилання на розв'язок: https://www.eolymp.com/uk/submissions/14825905
 """
 
-n = int(input())
-lst = [int(el) for el in input().split()]
-print(min(lst))
+n, k = map(int, input().split())
+array = [int(el) for el in input().split()]
+sort_array = sorted(array)
+result = sort_array[k - 1]
+print(result)
