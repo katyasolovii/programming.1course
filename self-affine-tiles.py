@@ -15,11 +15,16 @@ vector = np.array(x_0)
 result = np.dot(matrix, vector)
 
 result_points = []
+color_indexes = []
 
 for _ in range(N):
     x = x_0.copy()    
+    color_index = 0
     for i in range(k): 
-        x = np.dot(A, x) + random.choice(D)
+        index = random.randint(0, len(D) - 1)
+        x = np.dot(A, x) + D[index]
+        color_index = color_index * len(D) + index
+    color_indexes.append(color_index)
     result_points.append(x) 
 
 x = [point[0] for point in result_points]
@@ -28,7 +33,7 @@ y = [point[1] for point in result_points]
 colors = [np.sqrt(pow(xi, 2) + pow(yi, 2)) for xi, yi in zip(x, y)]
 plt.scatter(x, y, 
             s=1,
-            c=colors, 
+            c=color_indexes, 
             cmap='plasma', 
             label='точка')
 
