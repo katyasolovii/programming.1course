@@ -30,7 +30,6 @@ for _ in range(N):
 x = [point[0] for point in result_points]
 y = [point[1] for point in result_points]
 
-colors = [np.sqrt(pow(xi, 2) + pow(yi, 2)) for xi, yi in zip(x, y)]
 plt.scatter(x, y, 
             s=1,
             c=color_indexes, 
