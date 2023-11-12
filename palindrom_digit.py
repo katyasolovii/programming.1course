@@ -2,6 +2,7 @@
 Посилання на розв'язок: https://www.eolymp.com/uk/submissions/15076431
 """
 
+
 def convert(n, m):
     res_con = ""
     alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -12,6 +13,7 @@ def convert(n, m):
         res_con += alphabet[index]
         n //= m
     return res_con
+
 
 def palindrome(s):
     return s == s[::-1]
