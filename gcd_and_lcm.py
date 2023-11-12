@@ -7,7 +7,6 @@
 #(15,12),(18,10),(20,9),(30,6),(36,5),(45,4),(60,3),(90,2),(180,1)
 #(3,60),(5,36),(6,30),(9,20) задовільняють (4)
 #алгоритм Евкліда
-import math
 def find_gcd(x, y):
     while y != 0:
         x, y = y, x % y
@@ -15,7 +14,7 @@ def find_gcd(x, y):
 def find_pairs(A, B):
     gcdPQ_lcmPQ = A * B
     pairs = set()
-    for P in range(1, gcdPQ_lcmPQ + 1):
+    for P in range(1, int(gcdPQ_lcmPQ ** 0.5) + 1):
         if gcdPQ_lcmPQ % P == 0:
             Q = gcdPQ_lcmPQ // P
             if find_gcd(P, Q) == A:
