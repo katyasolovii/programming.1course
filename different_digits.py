@@ -1,5 +1,5 @@
 """
-Посилання на розв'язок: https://www.eolymp.com/uk/submissions/15071886
+Посилання на розв'язок: https://www.eolymp.com/uk/submissions/15098183
 """
 
 a, b = [int(i) for i in input().split()]
@@ -8,4 +8,4 @@ for num in range(a, b + 1):
     digits = str(num)
     if len(set(digits)) == len(digits):
         uniq_digits.append(digits)
-print(" ".join(uniq_digits))
+print(*uniq_digits)
