@@ -7,7 +7,7 @@ with open("/Users/katyasolovii/Desktop/programming/lab10/numbers.txt", "rt") as 
     for el in content:
         if el.isdigit():
             num = int(el)
-            square = num ** 2
-            if num % 2 != 0:
-                square_odd.append(square)
+            for k in range(0, 2):
+                if num == pow((2 * k + 1), 2):
+                    square_odd.append(num)
 print(len(square_odd))
