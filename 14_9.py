@@ -23,7 +23,7 @@ for line in content:
                 if el.isdigit():
                     summ += int(el)
                 elif not el.isspace(): # не враховує пробіли між цифрами
-                    raise ValueError
+                    raise ValueError()
             total_sum += summ
     except ValueError as e:
         print(f"ValueError: файл {file_name} містить не лише дійсні числа!")
