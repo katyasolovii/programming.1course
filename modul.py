@@ -1,26 +1,60 @@
+def errors(matrix, rows, cols):
+    for row in matrix:
+        if len(row) != cols:
+            return False
+    return True
+
+
 def input_matrix():
-    print("Введіть матрицю:")
-    rows, cols = [int(el) for el in input().split()]
-    matrix = []
-    for i in range(rows):
-        count_el = [int(el) for el in input().split()]
-        # перевірка
-        if len(count_el) != cols:
+    while True:
+        print("Введіть матрицю:")
+        rows, cols = [int(el) for el in input().split()]
+        matrix = []
+        for i in range(rows):
+            count_el = [int(el) for el in input().split()]
+            matrix.append(count_el)
+    
+        if errors(matrix, rows, cols):
+            return matrix
+        else:
             print("Неправильно ввели матрицю! :( Почніть спочатку! :)")
-            return input_matrix()
-        matrix.append(count_el)
-    return matrix
 
 
 def print_matrix(matrix):
-    print("---------")
     mat = []
     for row in matrix:
         line = " ".join(map(str, row))  
         mat.append(line)
     result = "\n".join(mat) 
-    return result
-    
+    print("---------\n" + result + "\n---------")
+
+
+def input_vector():
+    while True:
+        print("Введіть вектор:")
+        rows, cols = [int(el) for el in input().split()]
+        vector = []
+        for i in range(rows):
+            count_el = [int(el) for el in input().split()]
+            vector.append(count_el)
+
+        if errors(vector, rows, cols):
+            return vector
+        else:
+            print("Неправильно ввели вектор! :( Почніть спочатку! :)")
+
+
+def convert_vec(vector):
+    # конвертуємо рядок вертора у стовпчик == матриця з одним стовпчиком
+    rows = len(vector)
+    cols = len(vector[0])
+    col = []
+    for i in range(cols):
+        col_el = []
+        for j in range(rows):
+            col_el.append(vector[j][i])
+        col.append(col_el)
+
 
 def multiply_matrices(matrix_1, matrix_2):
     # множемо рядок rows першої матриці на стовпчик cols другої матриці
@@ -28,7 +62,7 @@ def multiply_matrices(matrix_1, matrix_2):
     rows_1 = len(matrix_1)
     rows_2 = len(matrix_2)
     cols_2 = len(matrix_2[0])
-    # print( cols_1 , rows_1) (для себе)
+    print(cols_1 , cols_2, rows_1, rows_2)
     if cols_1 != rows_2:
         raise ValueError("Матриці не можна помножити! :( Оскільки, стовпці rows першої мариці != рядкам cols дургої матриці.")
     res = []
@@ -38,57 +72,18 @@ def multiply_matrices(matrix_1, matrix_2):
     for i in range(rows_1):
         for j in range(cols_2):  
             for k in range(rows_2): 
-                # print(matrix_1[i][k]) (для себе)
-                # print(matrix_2[k][j])
                 res[i][j] += matrix_1[i][k] * matrix_2[k][j]
-    return print_matrix(res)
-#try:
-#    res = multiply_matrices()
-#    print(res)
-#except ValueError as e:
-#    print(f"Помилка: {e}")
 
 
-def multiplication_of_a_vector_by_a_matrix(vector ,matrix):
-    cols_m = len(matrix[0])
-    rows_m = len(matrix)
-    # перевірка
-    if cols_m != len(vector):
-        raise ValueError("Кількість елементів в рядку матриці != кількості елементів ветора")
-    res = []
-    # множимо відповідні елементи вектора на кожен відповідний елемент рядка матриці, додаємо == координата вектора
-    for i in range(rows_m):
-        res_vec = 0
-        for j in range(cols_m):
-            res_vec += vector[j] * matrix[i][j]
-        res.append(res_vec)
-    return res
-# try:
-#    res = multiplication_of_a_vector_by_a_matrix()
-#    print(res)
-# except ValueError as e:
-#    print(f"Помилка: {e}")
- 
+def multiplication_of_a_vector_by_a_matrix(matrix, vector):
+    result = multiply_matrices(vector, matrix)
+    return result
+
 
 def multiplication_of_a_matrix_by_a_vector(matrix, vector):
-    cols_m = len(matrix[0])
-    rows_m = len(matrix)
-    # перевірка
-    if cols_m != len(vector):
-        raise ValueError("Кількість елементів в рядку матриці != кількості елементів ветора")
-    # множимо кожен відповідний елемент рядка матриці на відповідні елементи ветора, додаємо
-    res = []
-    for i in range(rows_m):
-        res_mat = 0
-        for j in range(len(vector)):
-            res_mat += matrix[i][j] * vector[j]
-        res.append(res_mat)
-    return res 
-# try:
-#    res = multiplication_of_a_matrix_by_a_vector()
-#    print(res)
-# except ValueError as e:
-#     print(f"Помилка: {e}")
+    vector = convert_vec(vector)
+    result = multiply_matrices(matrix, vector)
+    return result
 
 
 def matrix_row_permutation(matrix):
