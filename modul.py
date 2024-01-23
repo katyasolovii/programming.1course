@@ -54,6 +54,7 @@ def convert_vec(vector):
         for j in range(rows):
             col_el.append(vector[j][i])
         col.append(col_el)
+    return col
 
 
 def multiply_matrices(matrix_1, matrix_2):
@@ -73,6 +74,7 @@ def multiply_matrices(matrix_1, matrix_2):
         for j in range(cols_2):  
             for k in range(rows_2): 
                 res[i][j] += matrix_1[i][k] * matrix_2[k][j]
+    return res
 
 
 def multiplication_of_a_vector_by_a_matrix(matrix, vector):
@@ -86,87 +88,94 @@ def multiplication_of_a_matrix_by_a_vector(matrix, vector):
     return result
 
 
-def matrix_row_permutation(matrix):
+def to_standard(user_coords):
+    standard_coords = user_coords - 1
+    return standard_coords
+
+
+def data_for_row_permutation(matrix):
     print("Початкова матриця:")
     print_matrix(matrix)
-    row_1 = int(input("row_1 = "))
-    row_2 = int(input("row_2 = "))
+    i = to_standard(int(input("row_1 = ")))
+    j = to_standard(int(input("row_2 = ")))
+    swap_rows(matrix, i, j)
+
+
+def swap_rows(matrix, i, j):
     rows_m = len(matrix)
-    # починаю з 1 не з 0, зручніше
-    if 1 <= row_1 <= rows_m and 1 <= row_2 <= rows_m:
-        matrix[row_1 - 1], matrix[row_2 - 1] = matrix[row_2 - 1], matrix[row_1 - 1] 
+    if 0 <= i <= rows_m and 0 <= j <= rows_m:
+        matrix[i], matrix[j] = matrix[j], matrix[i] 
     else:
         print("Індекси рядків неправильні! :(")
     print("Матриця після перестановки рядків:")
     print_matrix(matrix)
+    return matrix
 
 
-def matrix_col_permutation(matrix):
+def data_for_col_permutation(matrix):
+    print("Початкова матриця:")
     print_matrix(matrix)
-    col_1 = int(input("col_1 = "))
-    col_2 = int(input("col_2 = "))
+    i = to_standard(int(input("col_1 = ")))
+    j = to_standard(int(input("col_2 = ")))
+    swap_cols(matrix, i, j)
+    
+
+def swap_cols(matrix, i , j):
     col_m = len(matrix[0])
     row_m =len(matrix)
     # проходимось по рядку змінючи елементи стовпчиків
-    if 1 <= col_1 <= col_m and 1 <= col_2 <= col_m:
-        for i in range(row_m):
-            # print(matrix[i])
-            matrix[i][col_1 - 1], matrix[i][col_2 - 1] = matrix[i][col_2 - 1], matrix[i][col_1 - 1]
+    if 0 <= i <= col_m and 0 <= j <= col_m:
+        for k in range(row_m):
+            matrix[k][i], matrix[k][j] = matrix[k][j], matrix[k][i]
     else:
         print("Індекси стовпчиків неправильні! :(")
     print("Матриця після перестановки стовпчиків:")
     print_matrix(matrix)
+    return matrix
 
 
-def getting_a_matrix_row(matrix):
+def getting_row(matrix, i):
     rows_m = len(matrix)
-    needed_row = int(input("Введіть бажаний рядок матриці, який ви хочете отримати: "))
-    if 1 <= needed_row <= rows_m:
-        return matrix[needed_row - 1]
+    needed_row = to_standard(int(input("Введіть бажаний рядок матриці, який ви хочете отримати: ")))
+    if 0 <= needed_row <= rows_m:
+        return matrix[needed_row]
     else:
         print("Індекс рядка неправильний! :(")
 
 
-def multiplication_of_a_vector_by_a_number(vector, n):
-    res= []
-    for el in vector:
-        el *= n
-        res.append(el)
-    return res
+def multiplication(vector, n):
+    v = []
+    for i in vector:
+        v.append(i * n)
+    return v
 
 
-def subtraction_of_the_vector_from_all_rows_of_the_matrix(matrix, vector):
+def subtraction(matrix, vector):
     cols_m = len(matrix[0])
     rows_m = len(matrix)   
     rows_v = len(vector) 
-    if cols_m != rows_v:
+    cols_v = len(vector[0])
+    if rows_m != cols_v:
         raise ValueError("Кількість елементів в стовпчику матриці != кількості елементів вектора")
-    res = []
+    res_mat = []
     # проходимось по кожному одному рядку, віднімаючи відповідний елемент матриці від відповідного елементу вектора
-    for row_m in matrix:
-        res_mat = []
-        for i in range(len(row_m)):
-            res_row = row_m[i] - vector[i]
-            res_mat.append(res_row)
-        res.append(res_mat)
-    return res
-# try:
-#     res = subtraction_of_the_vector_from_all_rows_of_the_matrix()
-#     print(res)
-# except ValueError as e:
-#     print(f"Помилка: {e}")
+    for rows_m in matrix:
+        res_vec = []
+        for i in range(len(rows_m)):
+            res_row = rows_m[i] - vector[0][i]
+            res_vec.append(res_row)
+        res_mat.append(res_vec)
+    return res_mat
+
 
 # додала одну додаткову функцію, щоб написати тільки модулями в matrix.py
-def adding_a_vector_from_a_vector(vector1, vector2):
+def add(vector1, vector2):
+    cols_v1 = len(vector1)
+    cols_v2 = len(vector2)
     # Перевірка, чи вектори мають однакову довжину
-    if len(vector1) != len(vector2):
+    if cols_v1 != cols_v2:
         raise ValueError("Не можна додавати вектори, у яких різна кількість елементів!")
     res = []
-    for i in range(len(vector1)):
+    for i in range(cols_v1):
         res.append(vector1[i] + vector2[i])
     return res
-# try:
-#     result = adding_a_vector_from_a_vector(vector1, vector2)
-#     print(result)
-# except ValueError as e:
-#     print(f"Помилка: {e}")
