@@ -30,19 +30,19 @@ class Rectangle:
 
 
 class Trapeze:
+    """
+    Parameters
+    ----------
+    base_a : int 
+        основа трапеції a
+    base_b : int
+        основа трапеції b
+    lateral_c : int
+        бічна сторона c
+    lateral_d : int 
+        бічна сторона c
+    """
     def __init__(self, a, b, c, d) -> None:
-        """
-        Attributes
-        ----------
-        base_a : int 
-            основа трапеції a
-        base_b : int
-            основа трапеції b
-        lateral_c : int
-            бічна сторона c
-        lateral_d : int
-            бічна сторона d
-        """
         if a == b or c <= 0 or d <= 0 or abs(a - b) >= c + d:
             raise ValueError("Трапеції не існує.")
         self.base_a = a
