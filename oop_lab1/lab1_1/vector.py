@@ -3,6 +3,11 @@ from math import sqrt, pow
 
 class Vector:
     def __init__(self, components):
+        if not isinstance(components, list):
+            raise ValueError("Координати мають бути списком.")
+        for i in components:
+            if not isinstance(i, int or float):
+                raise ValueError("Неправильний тип даних.")
         self.components = components
     
     def dim_vec(self):
