@@ -32,9 +32,16 @@ class Rectangle:
 class Trapeze:
     def __init__(self, a, b, c, d) -> None:
         """
-        Нехай,
-        base_a, base_b - основи
-        lateral_c,lateral_d - бічні сторони   
+        Attributes
+        ----------
+        base_a : int 
+            основа трапеції a
+        base_b : int
+            основа трапеції b
+        lateral_c : int
+            бічна сторона c
+        lateral_d : int
+            бічна сторона d
         """
         if a == b or c <= 0 or d <= 0 or abs(a - b) >= c + d:
             raise ValueError("Трапеції не існує.")
@@ -75,47 +82,43 @@ class Circle:
 
     def circumference(self):
         return 2 * pi * self.r
-    
 
-files = ["/Users/katyasolovii/Documents/programming/oop/input01.txt"]
+
+files = ["/Users/katyasolovii/Documents/programming/oop/lab1_1/input02.txt"]
 max_area = None
 max_perimeter = None
+constructors = {
+    'Triangle': Triangle, 
+    'Rectangle': Rectangle, 
+    'Trapeze': Trapeze, 
+    'Parallelogram' : Parallelogram,
+    'Circle' : Circle
+}
 for file in files:
     geom_shapes = []
     with open(file, 'r') as file:
         for line in file:
-            data = line.split()
-            shapes_type = data[0]
-            p = list(map(int, data[1:]))
-            # розпакуємо парметри для кожної геометричної фігури
             try:
-                if shapes_type == "Triangle":
-                    shapes = Triangle(*p)
-                elif shapes_type == "Rectangle":
-                    shapes = Rectangle(*p)
-                elif shapes_type == "Trapeze":
-                    shapes = Trapeze(*p)
-                elif shapes_type == "Parallelogram":
-                    shapes = Parallelogram(*p)
-                elif shapes_type == "Circle":
-                    shapes = Circle(*p)
+                data = line.split()
+                shape_type = data[0]
+                params = list(map(int, data[1:]))
+                if shape_type not in constructors:
+                    raise ValueError("Невідома геометрична фігура.")
+                shape = constructors[shape_type](*params)
+                if shape_type != "Circle":
+                    geom_shapes.append((shape, shape.area(), shape.perimeter()))
                 else:
-                    raise ValueError("Невідома геометрична фігура.") 
-                if shapes_type != "Circle":
-                    geom_shapes.append((shapes, shapes.area(), shapes.perimeter()))
-                else:
-                    geom_shapes.append((shapes, None, shapes.circumference()))
+                    geom_shapes.append((shape, None, shape.circumference()))
             except ValueError as e:
                 print(f"Error: {e}")
-        for shapes, area, perimeter in geom_shapes:
-            # порівнюємо кожну площу/периметр з попередніми, якщо поточне не є нульовими;
-            # за умовою 80-81 кортеж max пустий, то перше поточне значення буде першим
-            if area is not None:
-                if max_area is None or area > max_area[1]:
-                    max_area = (shapes, area)
-            if perimeter is not None:
-                if max_perimeter is None or perimeter > max_perimeter[1]:
-                    max_perimeter = (shapes, perimeter)
-
-print("Геометрична фігура з найбільшою площею:", max_area[0]) # як вивести тільки назву?
-print("Геометрична фігура з найбільшим периметром:", max_perimeter[0])
+    for shape, area, perimeter in geom_shapes:
+        if area is not None:
+            if max_area is None or area > max_area[1]:
+                max_area = (shape, area)
+        if perimeter is not None:
+            if max_perimeter is None or perimeter > max_perimeter[1]:
+                max_perimeter = (shape, perimeter)
+if max_area is not None:
+    print("Геометрична фігура з найбільшою площею:", max_area[0])
+if max_perimeter is not None:
+    print("Геометрична фігура з найбільшим периметром:", max_perimeter[0])
