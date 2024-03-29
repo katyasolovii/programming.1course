@@ -2,9 +2,8 @@ from rational_num import Rational_numbers
 from math import sqrt
 
 with open("/Users/katyasolovii/Documents/programming/oop/lab2/input2.txt", "r") as file:
-    with open("/Users/katyasolovii/Documents/programming/oop/lab2/result2.txt", "w") as rec_file:
+    with open("/Users/katyasolovii/Documents/programming/oop/lab2/result3.txt", "w") as rec_file:
         for line in file:
-            print(line)
             ls = []
             for num in line.split(","):  
                 coef = Rational_numbers.from_string(num.strip())  
@@ -45,29 +44,26 @@ with open("/Users/katyasolovii/Documents/programming/oop/lab2/input2.txt", "r") 
             elif deg > 2:
                 res = True
                 for num in ls:
-                    if isinstance(num.numerator, int) and isinstance(num.denominator, int):
-                        res = True
+                    if not isinstance(Rational_numbers.__str__(num), int):
+                        rec_file.write(f"Коефіцієнти многочлена степеня {deg} не цілі. \n")
+                        break
                     else:
-                        res = False
-                if res:
-                    f_n = Rational_numbers.__str__(abs(ls[-1]) + Rational_numbers(1, 1))
-                    s_n = Rational_numbers.__str__(abs(ls[0]) + Rational_numbers(1, 1))
-                    div_free = range(1, int(float(f_n)))
-                    div_sen = range(1, int(float(s_n)))
-                    x = []
-                    for p in div_free:
-                        for q in div_sen:
-                            possible_x = float(Rational_numbers.__str__(Rational_numbers(p,q)))
-                            value = 0
-                            for i, j in zip(range(deg, 1, -1), range(deg)):
-                                z = float(Rational_numbers.__str__(ls[j]))
-                                value += z * pow(possible_x, i)
-                            if value == 0:
-                                x.append(value)
-                    if x:   
-                        rec_file.write(f"Корені многочлена степеня {deg}: {x}\n")
-                    else:
-                        rec_file.write(f"Коренів многочлена степеня {deg} немає.\n")
-                else:
-                    rec_file.write(f"Коефіцієнти многочлена степеня {deg} не цілі. \n")
+                        f_n = Rational_numbers.__str__(abs(ls[-1]) + Rational_numbers(1, 1))
+                        s_n = Rational_numbers.__str__(abs(ls[0]) + Rational_numbers(1, 1))
+                        div_free = range(1, int(float(f_n)))
+                        div_sen = range(1, int(float(s_n)))
+                        x = []
+                        for p in div_free:
+                            for q in div_sen:
+                                possible_x = float(Rational_numbers.__str__(Rational_numbers(p,q)))
+                                value = 0
+                                for i, j in zip(range(deg, -1, -1), range(deg + 1)):
+                                    z = float(Rational_numbers.__str__(ls[j]))
+                                    value += z * pow(possible_x, i)
+                                if value == 0:
+                                    x.append(possible_x)
+                        if x:   
+                            rec_file.write(f"Корені многочлена степеня {deg}: {x}\n")
+                        else:
+                            rec_file.write(f"Коренів многочлена степеня {deg} немає.\n")
     print("The happy end!")
