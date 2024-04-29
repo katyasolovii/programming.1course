@@ -1,6 +1,6 @@
 from math import gcd
 
-class Rational_numbers:
+class RationalNumber:
     
     __slots__ = ["_n", "_d"]
 
@@ -48,34 +48,34 @@ class Rational_numbers:
 
     def __add__(self, other):
         if isinstance(other, int):
-            other = Rational_numbers(other, 1)
-        return Rational_numbers(self.numerator * other.denominator + other.numerator * self.denominator, self.denominator * other.denominator)
+            other = RationalNumber(other, 1)
+        return RationalNumber(self.numerator * other.denominator + other.numerator * self.denominator, self.denominator * other.denominator)
 
     def __radd__(self, other):
         return self.__add__(other)
 
     def __sub__(self, other):
         if isinstance(other, int):
-            other = Rational_numbers(other)
-        return Rational_numbers(self.numerator * other.denominator - other.numerator * self.denominator, self.denominator * other.denominator)
+            other = RationalNumber(other)
+        return RationalNumber(self.numerator * other.denominator - other.numerator * self.denominator, self.denominator * other.denominator)
 
     def __rsub__(self, other):
         return other.__sub__(self) 
 
     def __mul__(self, other):
         if isinstance(other, int):
-            other = Rational_numbers(other)
-        return Rational_numbers(self.numerator * other.numerator, self.denominator * other.denominator)
+            other = RationalNumber(other)
+        return RationalNumber(self.numerator * other.numerator, self.denominator * other.denominator)
 
     def __rmul__(self, other):
         return other.__mul__(self)
 
     def __truediv__(self, other):
         if isinstance(other, int):
-            other = Rational_numbers(other, 1)
+            other = RationalNumber(other, 1)
         if other.numerator == 0:
             raise ValueError("Ділення на 0.")
-        return Rational_numbers(self.numerator * other.denominator, self.denominator * other.numerator)
+        return RationalNumber(self.numerator * other.denominator, self.denominator * other.numerator)
     
     def __rtruediv__(self, other):
         if self.numerator == 0:
@@ -83,7 +83,7 @@ class Rational_numbers:
         return self.__truediv__(other)
 
     def __abs__(self):
-        return Rational_numbers(abs(self.numerator), abs(self.denominator))
+        return RationalNumber(abs(self.numerator), abs(self.denominator))
 
     def sign(self):
         """
@@ -110,7 +110,7 @@ class Rational_numbers:
 
     def __eq__(self, other):
         if isinstance(other, int):
-            other = Rational_numbers(other)
+            other = RationalNumber(other)
         return self.numerator == other.numerator and self.denominator == other.denominator
 
     def inverse(self):
@@ -119,7 +119,7 @@ class Rational_numbers:
         """
         if self.numerator == 0:
             raise ValueError("Знаменник оберненого дробу 0.")
-        return Rational_numbers(self.denominator, self.numerator)
+        return RationalNumber(self.denominator, self.numerator)
 
     def __str__(self):
         if self.denominator == 1:
