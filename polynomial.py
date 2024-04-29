@@ -1,12 +1,12 @@
-from rational_num import Rational_numbers
+from rational_num import RationalNumber
 
 class Polynomial(dict):
     """
     Клас Polynomial представляє многочлен як словник <степінь: коефіцієнт>
     """
 
-
     def __init__(self, arg, coeff_type=float):
+        self.coeff_type = coeff_type
         if isinstance(arg, str):
             self._parse_string(arg)
         elif isinstance(arg, dict):
@@ -17,74 +17,73 @@ class Polynomial(dict):
             for coeff in arg:
                 self[i] = coeff
                 i += 1
-        elif isinstance(arg, (int, float)):
+        elif isinstance(arg, (int, float, RationalNumber)):
             self[0] = coeff_type(arg)
         else:
             raise ValueError("Неправильний формат многочлена")
         self._reduce()
     
-
     def type_rational(self, number):
         if "x^" in number:
             coeff, deg = number.split("x^")
-            coeff = Rational_numbers.__str__(Rational_numbers.from_string(coeff))
+            coeff = RationalNumber.from_string(coeff)
             if not deg:
                 coeff = 0
                 deg = 0
         elif "x" in number:
             coeff, deg = number.split("x")
-            coeff = Rational_numbers.__str__(Rational_numbers.from_string(coeff))
+            coeff = RationalNumber.from_string(coeff)
             deg = 1
         else:
-            coeff = Rational_numbers.__str__(Rational_numbers.from_string(number))
+            coeff = RationalNumber.from_string(number)
             deg = 0
         return coeff, deg
 
-
-    def _parse_string(self, string):
-        line = string.split(" + ")
-        for i in line:
-            i = i.strip()
-            if not i:
-                raise ValueError("Пустий рядок")
-            elif "/" in i:
-                coeff, deg = self.type_rational(i)
-            elif "x^" in i:
-                coeff, deg = i.split("x^")
-                if not coeff:
-                    coeff = 1
-                else:
-                    coeff = float(coeff)
-                if not deg:
-                    coeff = 0
-                    deg = 0
-            elif "x" in i:
-                coeff, deg = i.split("x")
-                deg = 1
-                if not coeff:
-                    coeff = 1
-                else:
-                    coeff = float(coeff)
+    def _parse_monomial(self, string):
+        if "/" in string:
+            coeff, deg = self.type_rational(string)
+        elif "x^" in string:
+            coeff, deg = string.split("x^")
+            if not coeff:
+                coeff = 1
             else:
-                coeff = i
+                coeff = float(coeff) 
+            if not deg:
+                coeff = 0
                 deg = 0
+        elif "x" in string:
+            coeff, deg = string.split("x")
+            deg = 1
+            if not coeff:
+                coeff = 1
+            else:
+                coeff = float(coeff)
+        else:
+            coeff = float(string)
+            deg = 0
+        return coeff, deg
+            
+    def _parse_string(self, string):
+        line = string.split("+")
+        for el in line:
+            el = el.strip()
+            if not el:
+                raise ValueError("Пустий рядок")
+            coeff, deg = self._parse_monomial(el)
             try:
-                self[int(deg)] = float(coeff)
+                self[int(deg)] = coeff
             except ValueError:
                 raise ValueError("Неправильний формат многочлена")
             
-
     def copy(self):
-        return Polynomial(self)
-    
+        return Polynomial(self, self.coeff_type)
 
     def as_type(self, coeff_type):
         new_coeffs = {}
         for deg, coeff in self.items():
             # coeff_type  - новий тип даних, на який треба замінити (наприклад int(coeff))
             new_coeffs[deg] = coeff_type(coeff)
-        return Polynomial(new_coeffs)
-    
+        return Polynomial(new_coeffs, coeff_type)
 
     def __str__(self):
         polynomial = []
@@ -97,10 +96,8 @@ class Polynomial(dict):
                 polynomial.append(f"{coeff}x^{deg}")
         return " + ".join(polynomial)
 
-
     def __repr__(self):
         return f"Polynomial({dict(self)})"
-
 
     def __add__(self, other):
         res = {}
@@ -119,24 +116,21 @@ class Polynomial(dict):
                 res.setdefault(deg , 0)
                 res[deg] += coeff + other
             return Polynomial(res)
-        elif not isinstance(other, Polynomial):
-            try:
-                other_poly = Polynomial(other)
-                return self + other_poly
-            except:
-                raise ValueError("Заданий тип не можна перевести у поліном")
+        try:
+            other_poly = Polynomial(other)
+            return self + other_poly
+        except:
+            raise ValueError("Заданий тип не можна перевести у поліном")
     
-
     def inverse(self):
         """
-        Метод повертає обернений поліном, змінюючи знак всіх коефіцієнтів.
+        Метод повертає негативний поліном, змінюючи знак всіх коефіцієнтів на протилежний.
         Це знадобиться для метода __sub__, щоб скороти та облегшити код.
         """
         inv_poly = {}
         for deg, coeff in self.items():
             inv_poly[deg] = -coeff
         return Polynomial(inv_poly)
-
 
     def __sub__(self, other):
         """
@@ -147,7 +141,6 @@ class Polynomial(dict):
         else:
             raise ValueError("Заданий тип не можна перевести у поліном")
         
-
     def __mul__(self, other):
         if isinstance(other, Polynomial):
             res = {}
@@ -164,7 +157,6 @@ class Polynomial(dict):
         else: 
             raise ValueError("Заданий тип не можна перевести у поліном")
 
-
     def __call__(self, value):
         """
         Метод рахує значення многочлена у заданій точці.
@@ -174,16 +166,16 @@ class Polynomial(dict):
             res += coeff * (value ** deg)
         return res
 
-
-    def ____truediv__(self, value):
+    def __truediv__(self, value):
         """
         Ділення сногочлена на число.
         """
+        if isinstance(value, Polynomial):
+            raise NotImplementedError("Ділення многочлена на многочлен не підтримується у цьому класі.")
         res = {}
         for deg, coeff in self.items():
             res[deg] = coeff / value
         return Polynomial(res)
-
 
     def derivative(self):
         """
@@ -199,7 +191,6 @@ class Polynomial(dict):
             res[deg - 1] = coeff * deg
         return Polynomial(res)
 
-
     def primitive(self):
         """
         Первісна многочлена (ігнорувати +С)
@@ -210,7 +201,6 @@ class Polynomial(dict):
                 res[1] = coeff
             res[deg + 1] = coeff / (deg + 1)
         return Polynomial(res)
-
 
     def _reduce(self):
         """
@@ -223,14 +213,13 @@ class Polynomial(dict):
         for deg in keys_to_delete:
             del self[deg]
 
-
     def div(self, other):
         """
         Ділення многочленів. Повертає частку і остачу.
         quotient - частка
         remainder(отримуємо від self, змінюючи кожен раз, поки max степінь self не буде меншою за max other) - остача 
         """
-        if isinstance(other, Polynomial):
+        if not isinstance(other, Polynomial):
             other = Polynomial(other)
         if not isinstance(other, Polynomial):
             raise ValueError("Дільник має бути об'єктом класу Polynomial")
@@ -251,7 +240,6 @@ class Polynomial(dict):
             remainder._reduce()
         return quotient, remainder
 
-
     def euclidean(self, other):
         a = self.copy()
         b = other.copy()
@@ -265,6 +253,7 @@ class Polynomial(dict):
 if __name__ == "__main__":
     p = Polynomial("x^2 + 3x + 4")
     p1 = Polynomial("x + 1")
+    print(Polynomial.__repr__(p))
     q, r = Polynomial.div(p, p1)
     print("Частка:", q)
     print("Остача:", r)
@@ -293,7 +282,7 @@ if __name__ == "__main__":
     print(p0)
     print(p)
     print(p0 + p)
-    print(Polynomial.____truediv__(p,point1))
+    print(p / point1)
     print(p0 - p)
     print(p * p0)
     print("-----------------------")
@@ -316,7 +305,7 @@ if __name__ == "__main__":
     print(p1 + p3)
     print(p4 - p1)
     print(p1 * p6)
-    print(Polynomial.____truediv__(p1, point3))
+    print(p1 / point3)
     print("-----------------------")
     print("Копія многочлена, де коефіцієнти мають новий заданий тип\n")
     # перевірка роботи з різними типами, переведення з одного типа на інший
@@ -327,7 +316,7 @@ if __name__ == "__main__":
     print("-----------------------")
     print("Значення у точці та взяття похідної, первісної\n")
     # перевірка на значення у точці та взяття похідної, первісної
-    print(Polynomial.__call__(p1, point2))
+    print(p1(point2))
     print(Polynomial.derivative(p6))
     print(Polynomial.primitive(p1))
     print(Polynomial.primitive(p))
