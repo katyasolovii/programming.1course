@@ -1,4 +1,4 @@
-from rational_num import Rational_numbers
+from rational_num import RationalNumber
 from math import sqrt
 
 with open("/Users/katyasolovii/Documents/programming/oop/lab2/input2.txt", "r") as file:
@@ -6,11 +6,11 @@ with open("/Users/katyasolovii/Documents/programming/oop/lab2/input2.txt", "r") 
         for line in file:
             ls = []
             for num in line.split(","):  
-                coef = Rational_numbers.from_string(num.strip())  
+                coef = RationalNumber.from_string(num.strip())  
                 ls.append(coef)
             deg = len(ls) - 1
-            point_value_1 = Rational_numbers(0, 1) 
-            point = Rational_numbers(1, 1)
+            point_value_1 = RationalNumber(0, 1) 
+            point = RationalNumber(1, 1)
             for i in ls:
                 x = i * point
                 point_value_1 += x
