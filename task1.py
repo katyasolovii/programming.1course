@@ -1,10 +1,10 @@
-from rational_num import Rational_numbers
+from rational_num import RationalNumber
 
 with open("/Users/katyasolovii/Documents/programming/oop/lab2/input1.txt", "r") as file:
     numbers = []
     for line in file:
         l = line.strip()
-        numbers.append(Rational_numbers.from_string(l))
+        numbers.append(RationalNumber.from_string(l))
 max_num = None
 max_abs_num = None
 summ_num = 0
