@@ -12,8 +12,8 @@ with open("/Users/katyasolovii/Documents/programming/oop/lab2/input2.txt", "r") 
             point_value_1 = Rational_numbers(0, 1) 
             point = Rational_numbers(1, 1)
             for i in ls:
-                x = Rational_numbers.__mul__(i, point)
-                point_value_1 = Rational_numbers.__add__(x, point_value_1)
+                x = i * point
+                point_value_1 += x
             rec_file.write(f"Значення многочлена в точці x = 1: {point_value_1}\n")
             if deg <= 2:
                 if deg == 1:
@@ -44,21 +44,21 @@ with open("/Users/katyasolovii/Documents/programming/oop/lab2/input2.txt", "r") 
             elif deg > 2:
                 res = True
                 for num in ls:
-                    if not isinstance(Rational_numbers.__str__(num), int):
+                    if not isinstance(num, int):
                         rec_file.write(f"Коефіцієнти многочлена степеня {deg} не цілі. \n")
                         break
                     else:
-                        f_n = Rational_numbers.__str__(abs(ls[-1]) + Rational_numbers(1, 1))
-                        s_n = Rational_numbers.__str__(abs(ls[0]) + Rational_numbers(1, 1))
+                        f_n = float(abs(ls[-1]))
+                        s_n = float(abs(ls[0]))
                         div_free = range(1, int(float(f_n)))
                         div_sen = range(1, int(float(s_n)))
                         x = []
                         for p in div_free:
                             for q in div_sen:
-                                possible_x = float(Rational_numbers.__str__(Rational_numbers(p,q)))
+                                possible_x = float(p,q)
                                 value = 0
                                 for i, j in zip(range(deg, -1, -1), range(deg + 1)):
-                                    z = float(Rational_numbers.__str__(ls[j]))
+                                    z = float(ls[j])
                                     value += z * pow(possible_x, i)
                                 if value == 0:
                                     x.append(possible_x)
