@@ -76,9 +76,16 @@ class Mine(Object):
         return area
 
     @classmethod
-    def generate(cls, shape: tuple):
-        max_x, max_y = shape
-        x, y = random.randrange(max_x), random.randrange(max_y)
+    def generate(cls, shape: tuple, ships):
+        positions = []
+        for ship in ships:
+            for x, y in ship.get_area():
+                for x0 in [-1, 0, 1]:
+                    for y0 in [-1, 0, 1]:
+                        posib_position = (x + x0, y + y0)
+                        if posib_position not in positions:
+                            positions.append(posib_position)
+        x, y = random.choice(positions)
         return cls((x, y))
 
     def __repr__(self) -> str:
@@ -147,8 +154,9 @@ class Map:
         self._list_objects.append(obj)
 
     @classmethod
-    def generate(cls, shape, max_tries=100_000):
+    def generate(cls, shape, max_tries=500_000):
         res = cls(shape)
+        ships = []
 
         for size, amount in cls.config['ships'].items():
             # cls.config['ships'] - кількість кораблів кожного розміру, які ми додати раніше(на початку класу)
@@ -156,6 +164,7 @@ class Map:
                 for _ in range(max_tries):
                     try:
                         ship = Ship.generate(shape, size)
+                        ships.append(ship)
                         res.add_ship(ship)
                         break
                     except ValueError:
@@ -167,7 +176,7 @@ class Map:
             for _ in range(amount):
                 for _ in range(max_tries):
                     try:
-                        mine = Mine.generate(shape)
+                        mine = Mine.generate(shape, ships)
                         res.add_mine(mine)
                         break
                     except ValueError:
@@ -241,7 +250,7 @@ class Game:
             return 'Mine exploded!'
         
     def explode_mine(self, position: tuple, attack_map: Map):
-        area_expl = list(Mine(position).get_area())
+        area_expl = Mine(position).get_area()
         for x0, y0 in area_expl:
             if 0 <= x0 < attack_map.shape[0] and 0 <= y0 < attack_map.shape[1]:
                 attack_map._misses[x0][y0] = '.'
