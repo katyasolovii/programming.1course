@@ -117,22 +117,22 @@ class Map:
     def add_ship(self, ship: Ship):
         for x, y in ship.get_body():
             if x < 0 or x >= self.shape[0]:
-                raise ValueError("Ship out of map.")
+                raise ValueError('Ship out of map.')
             if y < 0 or y >= self.shape[1]:
-                raise ValueError("Ship out of map.")
+                raise ValueError('Ship out of map.')
             if self._occupied[x][y]:
-                raise ValueError("This position already occupied.")
+                raise ValueError('This position already occupied.')
 
         self._add_object(ship, area_occupied=True)
 
     def add_mine(self, mine: Mine):
         for x,y in mine.get_body():
             if x < 0 or x >= self.shape[0]:
-                raise ValueError("Ship out of map.")
+                raise ValueError('Mine out of map.')
             if y < 0 or y >= self.shape[1]:
-                raise ValueError("Ship out of map.")
+                raise ValueError('Mine out of map.')
             if self._occupied[x][y]:
-                raise ValueError("This position already occupied.")
+                raise ValueError('This position already occupied.')
 
         self._add_object(mine, area_occupied=True)
 
@@ -206,6 +206,9 @@ class Map:
             print('|', *row, '|')
         print('-' * (self.shape[0] * 2 + 3))
 
+    def show_bot(self):
+        pass
+
 
 class Game:
     def __init__(self, map_shape: tuple, map: Map) -> None:
@@ -215,13 +218,26 @@ class Game:
                 
     def generate_moves_for_bot(self, map_shape: tuple):
         x, y = random.randrange(map_shape[0]), random.randrange(map_shape[1])
+        while (x,y) in self.bots_moves:
+            x, y = random.randrange(map_shape[0]), random.randrange(map_shape[1])
         self.bots_moves.append((x, y))
         return x,y
     
     def moves_of_person(self):
-        x = int(input("Enter row: ")) 
-        y = int(input("Enter column: ")) 
-        return x,y
+        while True:
+            try: 
+                y = input('Enter column (A-J): ').upper()
+                if len(y) != 1 or not ('A' <= y <= 'J'):
+                    raise ValueError
+                # ord('A') == 65
+                y = ord(y) - ord('A')
+                x = int(input('Enter row (1-10): '))
+                if x < 1 or x > 10:
+                    raise ValueError
+                x -= 1
+                return x,y
+            except ValueError:
+                    print('Incorrect entry! Please enter again.')
 
     def shoots(self, position: tuple, opponent_map: Map, attack_map: Map):
         # attack_map - мапа, на якій будуть відображатися moves 
@@ -256,21 +272,40 @@ class Game:
                 attack_map._misses[x0][y0] = '.'
 
     def show_map(self, map: Map):
-        res = [[' '] * map.shape[1] for _ in range(map.shape[0])]
+        res = [[' '] * (map.shape[1] + 1) for _ in range(map.shape[0] + 1)]
+        
+        for y in range(map.shape[1]):
+            # 65 + y == відповідна літера
+            if y == 0:
+                res[0][y + 1] = f" {chr(ord('A') + y)}"
+            else:
+                res[0][y + 1] = f"{chr(ord('A') + y)}"
+
+        for x in range(map.shape[0]):
+            if x + 1 == 10:
+                res[x + 1][0] = f'{x + 1}'
+            else:
+                res[x + 1][0] = f' {x + 1}'
+
 
         for x in range(map.shape[0]):
             for y in range(map.shape[1]): 
                 if map._misses[x][y] == '.':
-                    res[x][y] = '\033[0;31m.\033[0m'
+                    res[x + 1][y + 1] = '\033[0;31m.\033[0m'
                 elif map._misses[x][y] == 'x':
-                    res[x][y] = '\033[0;31mx\033[0m'
+                    res[x + 1][y + 1] = '\033[0;31mx\033[0m'
                 elif map._misses[x][y] == 'o':
-                    res[x][y] = '\033[0;31mo\033[0m'
+                    res[x + 1][y + 1] = '\033[0;31mo\033[0m'
+        return res
 
-        print('-' * (map.shape[1] * 2 + 3))
-        for row in res:
-            print('|', *row, '|')
-        print('-' * (map.shape[1] * 2 + 3))
+    def show_both_maps(self):
+        m_person = self.show_map(self.map_person)
+        m_bot = self.show_map(self.map_bot)
+
+        print('-' * ((self.map_person.shape[1] + 1) * 5 + 4))
+        for row_person, row_bot in zip(m_person, m_bot):
+            print('|', ' '.join(row_person), '|', '     ', '|', ' '.join(row_bot), '|')
+        print('-' * ((self.map_person.shape[1] + 1) * 5 + 4))
 
     def is_game_over(self, map: Map):
         for el in map._objects:
@@ -280,15 +315,15 @@ class Game:
         return True
 
     def game_algorithm(self):
+        print('Your map:')
+        self.map_person.show()
         while not self.is_game_over(self.map_bot):
             while True:
-                print('Your map:')
-                self.map_person.show()
                 print("Player's turn")
                 x, y = self.moves_of_person()
                 res = self.shoots((x, y), self.map_bot, self.map_person)
                 print(res)
-                self.show_map(self.map_person)
+                self.show_both_maps()
                 if res == 'Missed!':
                     break
                 if self.is_game_over(self.map_bot):
@@ -300,11 +335,11 @@ class Game:
                 res = self.shoots((x, y), self.map_person, self.map_bot)
                 print("Bot's move: ", (x, y))
                 print(res)
-                self.show_map(self.map_bot)
-                if res == "Missed!":
+                self.show_both_maps()
+                if res == 'Missed!':
                     break
                 elif self.is_game_over(self.map_person):
-                    print("Game over! You lost.")
+                    print('Game over! You lost.')
                     return
 
 
