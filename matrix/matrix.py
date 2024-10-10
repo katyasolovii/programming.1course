@@ -11,11 +11,15 @@ def upper_triangular(matrix):
     # 2 9 5               2 9 5                        0 3 1                       0 0 -28/17 
     cols_m = len(matrix[0])
     rows_m = len(matrix)
+    sign = 1
     for i in range(rows_m):
+        if all(matrix[i][j] == 0 for i in range(rows_m) for j in range(cols_m)):
+            return 0
         if matrix[i][i] == 0:
             for k in range(i + 1, rows_m):
                 if matrix[k][i] != 0:
                     modul.swap_rows(matrix, i, k)
+                    sign *= -1
                 else:   
                     continue
         for j in range(i + 1, rows_m):
@@ -25,7 +29,7 @@ def upper_triangular(matrix):
             mat_cur = modul.multiplication(matrix[i], num)
             # далі від цього рядка віднімаємо рядок інший і оновлюємо матрицю
             matrix[j] = modul.add(matrix[j], mat_cur)
-    return modul.print_matrix(matrix)
+    return sign, modul.print_matrix(matrix)
 
 
 matrix = modul.input_matrix()
@@ -51,9 +55,9 @@ print(f"Ранг матриці: {res}")
 
 def determinant():
     # використовуємо цей код, бо так тоді визначник == добутку діагоналі матриці
-    upper_triangular(matrix) 
+    sign, upper_matrix = upper_triangular(matrix)  # Отримуємо матрицю у верхній трикутній формі
     rows_m = len(matrix)
-    determinant = 1
+    determinant = sign
     for i in range(rows_m):
         determinant *= matrix[i][i]
     return determinant
